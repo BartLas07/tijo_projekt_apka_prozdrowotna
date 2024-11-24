@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Health App - Register</title>
+
+    <!-- Bootstrap CSS (CDN) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Dodatkowe style -->
+    <style>
+        body {
+            background-color: #f0f4f7;
+            color: #333;
+        }
+
+        .typ_posilku_i_skład {
+
+            display: flex;
+            flex-direction: column;
+            max-width: 700px;
+            margin: 80px auto;
+            padding: 20px;
+            background-color: #cfcfcf;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .typ_posilku{
+            display: flex;
+            flex-direction: column;
+
+
+        }
+
+        .typ_posilku>div{
+            width: 100px;
+            margin: 10px;
+            text-align: center;
+            line-height: 75px;
+            font-size: 15px;
+            background-color: #f17878;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sklad_posilku{
+            display: flex;
+
+
+        }
+        .sklad_posilku>div{
+            background-color: #afa8a8;
+            width: 100px;
+            margin: 15px;
+            text-align: center;
+            line-height: 75px;
+            font-size: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-top: 1px solid #e0e0e0;
+        }
+        #bt_dodaj{
+
+            text-decoration: none;
+            color: #515151;
+            font-weight: bold;
+
+
+        }
+        #bt_dodaj:hover {
+            width: max-content;
+            height: max-content;
+            text-decoration: none;
+            background-color: #303030;
+        }
+
+    </style>
+</head>
+<body>
+<div class="typ_posilku_i_skład">
+    <div class="sklad_posilku">
+        <div>
+        <a  id="bt_dodaj" href="http://localhost:8080/searchMeal_Ingredient">
+            Add New
+        </a>
+        </div>
+        <div>Sód<span></span></div>
+        <div>Węglowodany<span></span></div>
+        <div>Białko<span></span></div>
+        <div>Składnik<span></span></div>
+    </div>
+
+    <div class="typ_posilku">
+
+        <span th:text="${test}"></span>
+
+        <div>
+            <div>Śniadanie</div>
+            <div>S g</div>
+            <div>W g</div>
+            <div>B g</div>
+            <div>S co</div>
+        </div>
+        <div>
+        <div>Lunch</div>
+            <div>S g</div>
+            <div>W g</div>
+            <div>B g</div>
+            <div>S co</div>
+        </div>
+        <div>Obiad</div>
+        <div>S g</div>
+        <div>W g</div>
+        <div>B g</div>
+        <div>S co</div>
+    </div>
+    <div>Przekąska</div>
+    <div>S g</div>
+    <div>W g</div>
+    <div>B g</div>
+    <div>S co</div>
+</div>
+    </div>
+
+</div>
+
+
+
+<footer class="footer">
+    <p>© 2024 Health App. All rights reserved.</p>
+</footer>
+
+<!-- Bootstrap JS (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kkVn1R8FIqQLAc4mCQ4Dl+BkIVPB/j1pceRl7SAUheex8sP4VZ7M+/MJeDjwzM8+" crossorigin="anonymous"></script>
+
+</body>
+</html>
