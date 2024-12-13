@@ -3,7 +3,7 @@ package com.example.apka_prozdrowotna.controller;
 import com.example.apka_prozdrowotna.model.*;
 import com.example.apka_prozdrowotna.model.json.IngradientsOptionJSON;
 import com.example.apka_prozdrowotna.model.json.IngradientsOptionResponseJSON;
-import com.example.apka_prozdrowotna.repository.Meal_IngredientRepository;
+import com.example.apka_prozdrowotna.repository.MealIngredientRepository;
 import com.example.apka_prozdrowotna.service.meal_perdion.BreakfastService;
 import com.example.apka_prozdrowotna.service.meal_perdion.DinnerService;
 import com.example.apka_prozdrowotna.service.meal_perdion.LunchService;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SearchIngredientController {
 
-    private final Meal_IngredientRepository mealIngredientRepository;
+    private final MealIngredientRepository mealIngredientRepository;
     private final BreakfastService breakfastService;
     private  final LunchService lunchService;
     private final DinnerService dinnerService;
@@ -38,7 +38,7 @@ public class SearchIngredientController {
         try {
             List<IngradientsOptionJSON> ingradientsOptionJSON = new ArrayList<>();
             List<String> ingradientsCollection = mealIngredientRepository.findAll().stream()
-                    .map(Meal_Ingredient::getIngredient)
+                    .map(MealIngredient::getIngredient)
                     .collect(Collectors.toList());
 
             ingradientsCollection.forEach(ingradientName -> {

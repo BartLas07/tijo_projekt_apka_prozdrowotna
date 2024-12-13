@@ -1,8 +1,6 @@
 package com.example.apka_prozdrowotna.repository.meal_period;
 
 
-import com.example.apka_prozdrowotna.model.Meal_Ingredient;
-import com.example.apka_prozdrowotna.model.dto.MealIngredientDTO;
 import com.example.apka_prozdrowotna.model.meal_period.Breakfast;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

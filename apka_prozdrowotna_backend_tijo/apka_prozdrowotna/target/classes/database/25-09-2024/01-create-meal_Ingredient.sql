@@ -70,36 +70,9 @@ CREATE TABLE IF NOT EXISTS snacks
 );
 
 
---liquibase formatted sql
---changeset blas:6
-CREATE TABLE IF NOT EXISTS dateDietDay
-(
-    day INTEGER NOT NULL,
-    month INTEGER NOT NULL,
-    year INTEGER NOT NULL,
-    dateDietDayid INTEGER AUTO_INCREMENT not null,
-    breakfast_id INTEGER,
-    lunch_id INTEGER,
-    dinner_id INTEGER,
-    snacks_id INTEGER,
-    PRIMARY KEY (dateDietDayid),
-    FOREIGN KEY (breakfast_id) REFERENCES breakfast(breakfast_id),
-    FOREIGN KEY (lunch_id) REFERENCES lunch(lunch_id),
-    FOREIGN KEY (dinner_id) REFERENCES dinner(dinner_id),
-    FOREIGN KEY (snacks_id) REFERENCES snacks(snacks_id)
-);
 
 
 
-
-
---liquibase formatted sql
---changeset blas:8
-INSERT INTO dateDietDay (day, month, year)
-VALUES (1,6,1995),
-       (12,7,1997),
-       (24,1,1993)
-;
 
 
 --liquibase formatted sql

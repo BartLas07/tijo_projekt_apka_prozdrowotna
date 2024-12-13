@@ -16,11 +16,5 @@ public class ApkaProzdrowotnaApplication {
 	}
 
 
-	@Bean
-	public FilterRegistrationBean<JwtFilter> filterRegistrationBean() {
-		FilterRegistrationBean<JwtFilter> filterRegistrationBean = new FilterRegistrationBean<>();
-		filterRegistrationBean.setFilter(new JwtFilter());
-		filterRegistrationBean.setUrlPatterns(Collections.singleton("/api/hello/*"));
-		return filterRegistrationBean;
-	}
+
 }

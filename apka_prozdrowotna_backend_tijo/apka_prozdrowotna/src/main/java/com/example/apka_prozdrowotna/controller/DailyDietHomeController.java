@@ -1,7 +1,7 @@
 package com.example.apka_prozdrowotna.controller;
 
 import com.example.apka_prozdrowotna.model.dto.MealIngredientDTO;
-import com.example.apka_prozdrowotna.repository.Meal_IngredientRepository;
+import com.example.apka_prozdrowotna.repository.MealIngredientRepository;
 import com.example.apka_prozdrowotna.service.meal_perdion.BreakfastService;
 import com.example.apka_prozdrowotna.service.meal_perdion.DinnerService;
 import com.example.apka_prozdrowotna.service.meal_perdion.LunchService;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DailyDietHomeController {
 
-    private final Meal_IngredientRepository mealIngredientRepository;
+    private final MealIngredientRepository mealIngredientRepository;
     private final BreakfastService breakfastService;
     private final LunchService lunchService;
     private final DinnerService dinnerService;
