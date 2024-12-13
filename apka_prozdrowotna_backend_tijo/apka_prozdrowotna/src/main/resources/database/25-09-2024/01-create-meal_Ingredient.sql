@@ -6,42 +6,39 @@ CREATE TABLE IF NOT EXISTS meal_Ingredient
 (
     meal_ingredient_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     ingredient VARCHAR(20) NOT NULL,
-    protein DOUBLE NOT NULL,
-    carbohydrates DOUBLE NOT NULL,
-    sodium DOUBLE NOT NULL,
-    calories DOUBLE NOT NULL,
-    fats DOUBLE NOT NULL,
-    cholesterol DOUBLE NOT NULL,
-    sugar DOUBLE NOT NULL,
-    fiber DOUBLE NOT NULL
+    protein DOUBLE ,
+    carbohydrates DOUBLE ,
+    sodium DOUBLE ,
+    calories DOUBLE ,
+    fats DOUBLE ,
+    cholesterol DOUBLE ,
+    sugar DOUBLE ,
+    fiber DOUBLE
 );
-
 
 
 --liquibase formatted sql
 --changeset blas:2
 
-
 CREATE TABLE IF NOT EXISTS breakfast
 (
-    breakfast_id INTEGER  AUTO_INCREMENT,
-    meal_ingredient_id INTEGER not null,
-    PRIMARY KEY (breakfast_id),
-    FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
-
+    breakfast_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    meal_ingredient_id INTEGER NOT NULL,
+    CONSTRAINT breakfast_fk
+        FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
+            ON DELETE CASCADE
 );
-
 
 --liquibase formatted sql
 --changeset blas:3
 
 CREATE TABLE IF NOT EXISTS lunch
 (
-    lunch_id INTEGER  AUTO_INCREMENT,
-    meal_ingredient_id INTEGER not null,
-    PRIMARY KEY (lunch_id),
-    FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
-
+    lunch_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    meal_ingredient_id INTEGER NOT NULL,
+    CONSTRAINT lunch_fk
+        FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
+            ON DELETE CASCADE
 );
 
 --liquibase formatted sql
@@ -49,28 +46,24 @@ CREATE TABLE IF NOT EXISTS lunch
 
 CREATE TABLE IF NOT EXISTS dinner
 (
-    dinner_id INTEGER  AUTO_INCREMENT,
-    meal_ingredient_id INTEGER not null,
-    PRIMARY KEY (dinner_id),
-    FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
-
+    dinner_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    meal_ingredient_id INTEGER NOT NULL,
+    CONSTRAINT dinner_fk
+        FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
+            ON DELETE CASCADE
 );
-
 
 --liquibase formatted sql
 --changeset blas:5
 
 CREATE TABLE IF NOT EXISTS snacks
 (
-    snacks_id INTEGER  AUTO_INCREMENT,
-    meal_ingredient_id INTEGER not null,
-    PRIMARY KEY (snacks_id),
-    FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
-
+    snacks_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    meal_ingredient_id INTEGER NOT NULL,
+    CONSTRAINT snacks_fk
+        FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
+            ON DELETE CASCADE
 );
-
-
-
 
 
 

@@ -14,6 +14,7 @@ public interface MealIngredientRepository extends JpaRepository<MealIngredient, 
    List<MealIngredient> findBySodium(Integer sodium);
    MealIngredient findByIngredient(String ingredient);
    List<MealIngredient> findAll();
+   void deleteAll();
 
    // Znajdź wszystkie składniki dla przekąsek z uwzględnieniem duplikatów
    @Query("SELECT new com.example.apka_prozdrowotna.model.dto.MealIngredientDTO(" +
@@ -26,7 +27,7 @@ public interface MealIngredientRepository extends JpaRepository<MealIngredient, 
            "CAST(ROUND(mi.cholesterol * (s.meal_quantity_of_grams / 100.0), 3) AS double), " +
            "CAST(ROUND(mi.sugar * (s.meal_quantity_of_grams / 100.0), 3) AS double), " +
            "CAST(ROUND(mi.fiber * (s.meal_quantity_of_grams / 100.0), 3) AS double)) " +
-           "FROM MealIngredient mi JOIN Snacks s ON mi.meal_ingredient_id = s.meal_ingredient_id " +
+           "FROM MealIngredient  mi JOIN Snacks s ON mi.meal_ingredient_id = s.meal_ingredient_id " +
            "ORDER BY s.created_at ASC")
    List<MealIngredientDTO> findAllBySnacksIdsWithDuplicates();
 

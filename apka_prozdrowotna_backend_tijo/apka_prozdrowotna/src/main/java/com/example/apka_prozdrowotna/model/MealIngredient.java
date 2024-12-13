@@ -13,7 +13,9 @@ import lombok.Setter;
 
 
 public class MealIngredient {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer meal_ingredient_id ;
     private String ingredient;
     private Double protein;
@@ -41,6 +43,12 @@ public class MealIngredient {
 
     }
 
+    public MealIngredient(String ingredient)
+    {
+        this.ingredient = ingredient;
+
+
+    }
 
     public MealIngredient() {
 
