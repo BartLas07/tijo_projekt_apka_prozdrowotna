@@ -3,6 +3,7 @@ package com.example.apka_prozdrowotna.controller;
 import com.example.apka_prozdrowotna.model.*;
 import com.example.apka_prozdrowotna.model.json.IngradientsOptionJSON;
 import com.example.apka_prozdrowotna.model.json.IngradientsOptionResponseJSON;
+import com.example.apka_prozdrowotna.model.meal_period.Breakfast;
 import com.example.apka_prozdrowotna.repository.MealIngredientRepository;
 import com.example.apka_prozdrowotna.service.meal_perdion.BreakfastService;
 import com.example.apka_prozdrowotna.service.meal_perdion.DinnerService;
@@ -63,8 +64,8 @@ public class SearchIngredientController {
             Integer ingredientId = mealIngredientRepository
                     .findByIngredient(ingredient.getLabel())
                     .getMeal_ingredient_id();
-            breakfastService.saveBreakfast(ingredientId, ingredient.getQuantity_of_grams());
-            return ResponseEntity.ok(ingredient);
+            Breakfast breakfast = breakfastService.saveBreakfast(ingredientId, ingredient.getQuantity_of_grams());
+            return ResponseEntity.ok(breakfast);
         } catch (Exception e) {
             log.error("Invalid JSON data: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid JSON data");
