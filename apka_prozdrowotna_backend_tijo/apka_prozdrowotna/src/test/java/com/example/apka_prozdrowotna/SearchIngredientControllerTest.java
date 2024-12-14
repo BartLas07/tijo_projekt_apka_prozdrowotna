@@ -34,7 +34,7 @@ public class SearchIngredientControllerTest {
     @BeforeAll
     void setupDatabase() {
         mealIngredientRepository.deleteAll();
-        mealIngredientRepository.save(new MealIngredient("Tomatoo23"));
+        mealIngredientRepository.save(new MealIngredient("Tomato"));
         mealIngredientRepository.save(new MealIngredient("Cheese"));
         mealIngredientRepository.save(new MealIngredient("Basil"));
     }
@@ -58,8 +58,7 @@ public class SearchIngredientControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].value", is("Tomatoo253")))
-                .andExpect(jsonPath("$[0].value", is("Tomatoo256")))
+                //then-testowe dla commitu
                 .andExpect(jsonPath("$[0].label", is("Tomato")))
                 .andExpect(jsonPath("$[0].label", is("Tomato")))
                 .andExpect(jsonPath("$[1].value", is("Cheese")))
