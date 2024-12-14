@@ -34,7 +34,7 @@ public class SearchIngredientControllerTest {
     @BeforeAll
     void setupDatabase() {
         mealIngredientRepository.deleteAll();
-        mealIngredientRepository.save(new MealIngredient("Tomatoo"));
+        mealIngredientRepository.save(new MealIngredient("Tomato"));
         mealIngredientRepository.save(new MealIngredient("Cheese"));
         mealIngredientRepository.save(new MealIngredient("Basil"));
     }
