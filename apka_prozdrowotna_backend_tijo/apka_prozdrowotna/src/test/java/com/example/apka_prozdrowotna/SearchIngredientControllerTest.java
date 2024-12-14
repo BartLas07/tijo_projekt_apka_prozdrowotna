@@ -34,7 +34,7 @@ public class SearchIngredientControllerTest {
     @BeforeAll
     void setupDatabase() {
         mealIngredientRepository.deleteAll();
-           mealIngredientRepository.save(new MealIngredient("Tomatoo24"));
+        mealIngredientRepository.save(new MealIngredient("Tomato"));
         mealIngredientRepository.save(new MealIngredient("Cheese"));
         mealIngredientRepository.save(new MealIngredient("Basil"));
     }
@@ -47,15 +47,19 @@ public class SearchIngredientControllerTest {
     @Test
     void testGetIngredientList() throws Exception {
 
+        Integer a=0;
         // When
         mockMvc.perform(get("/getIngradientList"))
+
+
+
 
                 // Then
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(3)))
                 //then-testowe dla commitu
-                   .andExpect(jsonPath("$[0].value", is("Tomatoo2465")))
+                .andExpect(jsonPath("$[0].label", is("Tomato2")))
                 .andExpect(jsonPath("$[0].label", is("Tomato")))
                 .andExpect(jsonPath("$[1].value", is("Cheese")))
                 .andExpect(jsonPath("$[1].label", is("Cheese")))
