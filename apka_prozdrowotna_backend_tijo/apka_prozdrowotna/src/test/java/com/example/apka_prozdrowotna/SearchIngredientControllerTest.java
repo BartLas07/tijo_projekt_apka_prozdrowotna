@@ -54,7 +54,7 @@ public class SearchIngredientControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].value", is("Tomato")))
+                .andExpect(jsonPath("$[0].value", is("Tomato9o")))
                 .andExpect(jsonPath("$[0].label", is("Tomato")))
                 .andExpect(jsonPath("$[1].value", is("Cheese")))
                 .andExpect(jsonPath("$[1].label", is("Cheese")))
