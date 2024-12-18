@@ -2,9 +2,9 @@ package com.example.apka_prozdrowotna.controller;
 
 import com.example.apka_prozdrowotna.model.*;
 import com.example.apka_prozdrowotna.model.json.IngradientsOptionJSON;
-import com.example.apka_prozdrowotna.model.json.IngradientsOptionResponseJSON;
-import com.example.apka_prozdrowotna.model.meal_period.Breakfast;
+import com.example.apka_prozdrowotna.model.json.MealIngredientSearchedOptionResponseJSON;
 import com.example.apka_prozdrowotna.repository.MealIngredientRepository;
+import com.example.apka_prozdrowotna.service.for_controller.SearchIngredientService;
 import com.example.apka_prozdrowotna.service.meal_perdion.BreakfastService;
 import com.example.apka_prozdrowotna.service.meal_perdion.DinnerService;
 import com.example.apka_prozdrowotna.service.meal_perdion.LunchService;
@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SearchIngredientController {
 
+    private final SearchIngredientService searchIngredientService;
     private final MealIngredientRepository mealIngredientRepository;
     private final BreakfastService breakfastService;
     private  final LunchService lunchService;
@@ -39,7 +40,7 @@ public class SearchIngredientController {
         try {
             List<IngradientsOptionJSON> ingradientsOptionJSON = new ArrayList<>();
             List<String> ingradientsCollection = mealIngredientRepository.findAll().stream()
-                    .map(MealIngredient::getIngredient)
+                    .map(MealIngredient::getMealIngredientName)
                     .collect(Collectors.toList());
 
             ingradientsCollection.forEach(ingradientName -> {
@@ -56,8 +57,17 @@ public class SearchIngredientController {
 
 
 
-
-
+    @PostMapping("/postIngredientToMealPeriod/{mealPeriod}")
+    public ResponseEntity<?> postIngredientToMealPeriod(@PathVariable String mealPeriod, @RequestBody MealIngredientSearchedOptionResponseJSON mealIngredientResponse) {
+        try {
+            searchIngredientService.postIngredientToMealPeriod(mealPeriod, mealIngredientResponse);
+            return ResponseEntity.ok(mealIngredientResponse.getLabel());
+        } catch (Exception e) {
+            log.error("Invalid JSON data: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid JSON data");
+        }
+    }
+/*
     @PostMapping("/postBreakfastIngredients")
     public ResponseEntity<?> postBreakfastIngredients(@RequestBody IngradientsOptionResponseJSON ingredient) {
         try {
@@ -114,4 +124,6 @@ public class SearchIngredientController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid JSON data");
         }
     }
+
+ */
 }

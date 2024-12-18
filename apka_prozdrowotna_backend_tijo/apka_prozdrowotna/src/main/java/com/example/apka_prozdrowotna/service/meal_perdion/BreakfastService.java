@@ -15,13 +15,13 @@ public class BreakfastService {
 
 
     @Transactional
-    public Breakfast saveBreakfast(Integer meal_ingradient_id, Integer meal_quantity_of_grams) {
-        Breakfast breakfast = new Breakfast(meal_ingradient_id, meal_quantity_of_grams);
+    public Breakfast saveMealInfredientsForBreakfast(Integer mealIngredientId, Integer mealIngredientQuantityInGrams) {
+        Breakfast breakfast = new Breakfast(mealIngredientId, mealIngredientQuantityInGrams);
         return breakfastRepository.save(breakfast);
     }
 
     @Transactional
-    public void deleteBreakfast(Integer typeOfMealIngredientId) {
-        breakfastRepository.deleteALlByBreakfast_id(typeOfMealIngredientId);
+    public void deleteMealIngredientFromBreakfast(Integer mealIngradientFromBreakfastId) {
+        breakfastRepository.deleteALlByMealIngredientForBreakfastId(mealIngradientFromBreakfastId);
     }
 }

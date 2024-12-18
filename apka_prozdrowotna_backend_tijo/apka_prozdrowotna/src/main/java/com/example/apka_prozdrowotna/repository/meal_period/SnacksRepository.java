@@ -11,7 +11,7 @@ public interface SnacksRepository extends JpaRepository<Snacks, Integer> {
 
 
     @Modifying
-    @Query("DELETE FROM Snacks s WHERE s.snacks_id = :typeOfMealIngredientId")
-    void deleteALlBySnacks_id(@Param("typeOfMealIngredientId") Integer typeOfMealIngredientId);
+    @Query("DELETE FROM Snacks s WHERE s.mealIngredientForSnacksId = :mealIngredientForMealPeriodId")
+    void deleteALlByMealIngredientForSnacksId(@Param("mealIngredientForMealPeriodId") Integer mealIngredientForMealPeriodId);
 
 }

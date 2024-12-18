@@ -7,17 +7,14 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "meal_ingredient")
 @Getter
 @Setter
-
-
 public class MealIngredient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer meal_ingredient_id ;
-    private String ingredient;
+    private Integer mealIngredientId ;
+    private String mealIngredientName;
     private Double protein;
     private Double carbohydrates;
     private Double sodium;
@@ -29,9 +26,9 @@ public class MealIngredient {
 
 
 
-    public MealIngredient(String ingredient, Double protein, Double carbohydrates, Double sodium, Double calories, Double fats, Double cholesterol, Double sugar, Double fiber)
+    public MealIngredient(String mealIngredientName, Double protein, Double carbohydrates, Double sodium, Double calories, Double fats, Double cholesterol, Double sugar, Double fiber)
     {
-        this.ingredient = ingredient;
+        this.mealIngredientName = mealIngredientName;
         this.protein = protein;
         this.carbohydrates = carbohydrates;
         this.sodium = sodium;
@@ -43,11 +40,9 @@ public class MealIngredient {
 
     }
 
-    public MealIngredient(String ingredient)
+    public MealIngredient(String mealIngredientName)
     {
-        this.ingredient = ingredient;
-
-
+       this.mealIngredientName = mealIngredientName;
     }
 
     public MealIngredient() {

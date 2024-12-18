@@ -13,17 +13,17 @@ public class Dinner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer dinner_id;
-    private Integer meal_ingredient_id;
-    private Integer meal_quantity_of_grams;
+    private Integer mealIngredientForDinnerId;
+    private Integer mealIngredientId;
+    private Integer mealIngredientQuantityInGrams;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_at;
 
-    public Dinner(Integer meal_ingredient_id, Integer quantity_of_grams) {
-        this.meal_ingredient_id = meal_ingredient_id;
-        this.meal_quantity_of_grams = quantity_of_grams;
+    public Dinner(Integer mealIngredientId, Integer mealIngredientQuantityInGram) {
+        this.mealIngredientId = mealIngredientId;
+        this.mealIngredientQuantityInGrams = mealIngredientQuantityInGram;
     }
 
     public Dinner() {}

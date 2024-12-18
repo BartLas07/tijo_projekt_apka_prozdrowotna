@@ -2,6 +2,7 @@ package com.example.apka_prozdrowotna.controller;
 
 import com.example.apka_prozdrowotna.model.dto.MealIngredientDTO;
 import com.example.apka_prozdrowotna.repository.MealIngredientRepository;
+import com.example.apka_prozdrowotna.service.for_controller.DailyDietHomeService;
 import com.example.apka_prozdrowotna.service.meal_perdion.BreakfastService;
 import com.example.apka_prozdrowotna.service.meal_perdion.DinnerService;
 import com.example.apka_prozdrowotna.service.meal_perdion.LunchService;
@@ -21,12 +22,34 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DailyDietHomeController {
 
-    private final MealIngredientRepository mealIngredientRepository;
-    private final BreakfastService breakfastService;
-    private final LunchService lunchService;
-    private final DinnerService dinnerService;
-    private final SnacksService snacksService;
+    private final DailyDietHomeService dailyDietHomeService;
 
+    @ResponseBody
+    @GetMapping("/getIngredients/{mealPeriod}")
+    public ResponseEntity<List<MealIngredientDTO>> getIngradientsFromMealPeriod(@PathVariable("mealPeriod") String mealPeriod) {
+        try {
+            List<MealIngredientDTO> ingredients = dailyDietHomeService.returnIngredientsFromMealPeriod(mealPeriod);
+            return ResponseEntity.ok(ingredients);
+        } catch (Exception e) {
+            log.error("Error fetching ingredients for '{}': ", mealPeriod, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/deleteIngredient/{mealPeriod}/{ingredientFromMealPeriodId}")
+    public ResponseEntity<?> deleteBreakfastIngredient(@PathVariable String mealPeriod,@PathVariable Integer ingredientFromMealPeriodId) {
+        try {
+            dailyDietHomeService.deleteIngredientFromMealPeriod(mealPeriod, ingredientFromMealPeriodId);
+            log.info("Ingredient with ID {} was successfully deleted from {}.", ingredientFromMealPeriodId, mealPeriod);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("Error deleting ingredient with ID {} from {}: ", ingredientFromMealPeriodId, mealPeriod, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while deleting the ingredient.");
+        }
+    }
+
+    /*
     @ResponseBody
     @GetMapping("/getBreakfastIngradients")
     public ResponseEntity<List<MealIngredientDTO>> getBreakfastIngradients() {
@@ -38,6 +61,7 @@ public class DailyDietHomeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @ResponseBody
     @GetMapping("/getLunchIngredients")
@@ -157,5 +181,7 @@ public class DailyDietHomeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+ */
 }
 

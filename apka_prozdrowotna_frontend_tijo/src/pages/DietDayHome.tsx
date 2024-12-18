@@ -42,7 +42,7 @@ function DietDayHome() {
 
   const fetchIngredients = async (url: string) =>
     await axios.get(url).then((response) => response.data);
-
+/*
   useEffect(() => {
     fetchIngredients('http://localhost:8080/getBreakfastIngradients').then(
       setSelectedOptionBreakfast
@@ -51,6 +51,18 @@ function DietDayHome() {
     fetchIngredients('http://localhost:8080/getDinnerIngradients').then(setSelectedOptionDinner);
     fetchIngredients('http://localhost:8080/getSnacksIngradients').then(setSelectedOptionSnacks);
   }, []);
+*/
+
+useEffect(() => {
+  fetchIngredients('http://localhost:8080/getIngredients/breakfast').then(
+    setSelectedOptionBreakfast
+  );
+  fetchIngredients('http://localhost:8080/getIngredients/lunch').then(setSelectedOptionLunch);
+  fetchIngredients('http://localhost:8080/getIngredients/dinner').then(setSelectedOptionDinner);
+  fetchIngredients('http://localhost:8080/getIngredients/snacks').then(setSelectedOptionSnacks);
+}, []);
+
+
 
   useEffect(() => {
     setBreakfastSum(roundSum(computeSum(selectedOptionBreakfast)));
@@ -125,7 +137,7 @@ function DietDayHome() {
   ) => {
     if (mealPeriodIngredientId === undefined) return;
 
-    const deleteUrl = `http://localhost:8080/${mealType}/${mealPeriodIngredientId}`;
+    const deleteUrl = `http://localhost:8080/deleteIngredient/${mealType}/${mealPeriodIngredientId}`;
 
     try {
       const response = await fetch(deleteUrl, {
