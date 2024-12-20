@@ -5,10 +5,6 @@ import com.example.apka_prozdrowotna.model.json.IngradientsOptionJSON;
 import com.example.apka_prozdrowotna.model.json.MealIngredientSearchedOptionResponseJSON;
 import com.example.apka_prozdrowotna.repository.MealIngredientRepository;
 import com.example.apka_prozdrowotna.service.for_controller.SearchIngredientService;
-import com.example.apka_prozdrowotna.service.meal_perdion.BreakfastService;
-import com.example.apka_prozdrowotna.service.meal_perdion.DinnerService;
-import com.example.apka_prozdrowotna.service.meal_perdion.LunchService;
-import com.example.apka_prozdrowotna.service.meal_perdion.SnacksService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,28 +23,22 @@ public class SearchIngredientController {
 
     private final SearchIngredientService searchIngredientService;
     private final MealIngredientRepository mealIngredientRepository;
-    private final BreakfastService breakfastService;
-    private  final LunchService lunchService;
-    private final DinnerService dinnerService;
-    private final SnacksService snacksService;
-
 
 
     @ResponseBody
-    @GetMapping("/getIngradientList")
+    @GetMapping("/getIngredientList")
     public ResponseEntity<List<IngradientsOptionJSON>> getIngredientList() {
         try {
-            List<IngradientsOptionJSON> ingradientsOptionJSON = new ArrayList<>();
+            List<IngradientsOptionJSON> ingradientsOptionJSONList = new ArrayList<>();
             List<String> ingradientsCollection = mealIngredientRepository.findAll().stream()
                     .map(MealIngredient::getMealIngredientName)
                     .collect(Collectors.toList());
 
             ingradientsCollection.forEach(ingradientName -> {
-                ingradientsOptionJSON.add(new IngradientsOptionJSON(ingradientName, ingradientName));
+                ingradientsOptionJSONList.add(new IngradientsOptionJSON(ingradientName, ingradientName));
             });
 
-            log.info(ingradientsOptionJSON.toString());
-            return ResponseEntity.ok(ingradientsOptionJSON);
+            return ResponseEntity.ok(ingradientsOptionJSONList);
         } catch (Exception e) {
             log.error("Error fetching ingredient list", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -58,7 +48,8 @@ public class SearchIngredientController {
 
 
     @PostMapping("/postIngredientToMealPeriod/{mealPeriod}")
-    public ResponseEntity<?> postIngredientToMealPeriod(@PathVariable String mealPeriod, @RequestBody MealIngredientSearchedOptionResponseJSON mealIngredientResponse) {
+    public ResponseEntity<?> postIngredientToMealPeriod(@PathVariable String mealPeriod,
+                                                        @RequestBody MealIngredientSearchedOptionResponseJSON mealIngredientResponse) {
         try {
             searchIngredientService.postIngredientToMealPeriod(mealPeriod, mealIngredientResponse);
             return ResponseEntity.ok(mealIngredientResponse.getLabel());

@@ -38,7 +38,7 @@ export const sumTableWrapperStyle: CSSProperties = {
   backgroundColor: '#d0e0d0',
   padding: '10px',
   borderRadius: '5px',
-  minHeight: '500px', // Dostosuj wysokość w razie potrzeby
+  minHeight: '500px',
 };
 
 export const rightSideRectangleStyle: CSSProperties = {
@@ -46,7 +46,7 @@ export const rightSideRectangleStyle: CSSProperties = {
   backgroundColor: '#d0e0d0',
   borderRadius: '5px',
   padding: '10px',
-  minHeight: '560px', // Dostosuj wysokość w razie potrzeby
+  minHeight: '560px', 
 };
 
 export const mealContainerStyle: CSSProperties = {

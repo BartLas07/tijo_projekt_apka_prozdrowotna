@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-const GET_INGREDIENTS_URL: string = 'http://localhost:8080/getIngradientList';
+const GET_INGREDIENTS_URL: string = 'http://localhost:8080/getIngredientList';
 
 const POST_BREAKFAST_INGRADIENTS: string = 'http://localhost:8080/postIngredientToMealPeriod/breakfast';
 const POST_DINNER_INGRADIENTS: string = 'http://localhost:8080/postIngredientToMealPeriod/dinner';

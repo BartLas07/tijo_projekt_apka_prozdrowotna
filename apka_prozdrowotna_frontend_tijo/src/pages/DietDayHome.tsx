@@ -9,19 +9,44 @@ import {
   sumTableWrapperStyle,
   rightSideRectangleStyle,
 } from '../styles/styles';
+import {
+  outerFlexContainerStyle,
+  leftSideMealSectionsStyle,
+  mealSectionItemStyle,
+  mealSumItemStyle,
+  pieChartContainerStyle,
+  pieChartCenterStyle,
+  pieChartContainerStyle2,
+} from '../styles/DietDayHomeStyles';
 import { ingredient } from '../custom_types/ingredient';
 import { Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, Legend } from 'chart.js';
 
 Chart.register(ArcElement, Legend);
 
-type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snacks';
+type IngredientsForMealPeriod = {
+  breakfast: ingredient[];
+  lunch: ingredient[];
+  dinner: ingredient[];
+  snacks: ingredient[];
+};
+
+type MealPeriod = keyof IngredientsForMealPeriod;
 
 function DietDayHome() {
-  const [selectedOptionBreakfast, setSelectedOptionBreakfast] = useState<ingredient[]>([]);
-  const [selectedOptionLunch, setSelectedOptionLunch] = useState<ingredient[]>([]);
-  const [selectedOptionDinner, setSelectedOptionDinner] = useState<ingredient[]>([]);
-  const [selectedOptionSnacks, setSelectedOptionSnacks] = useState<ingredient[]>([]);
+  const [selectedMealPeriod, setSelectedMealPeriod] = useState<IngredientsForMealPeriod>({
+    breakfast: [],
+    lunch: [],
+    dinner: [],
+    snacks: [],
+  });
+
+  const addIngredient = (mealType: MealPeriod, ingredient: ingredient) => {
+    setSelectedMealPeriod((prev) => ({
+      ...prev,
+      [mealType]: [...prev[mealType], ingredient],
+    }));
+  };
 
   const initialSum = {
     protein: 0,
@@ -42,43 +67,34 @@ function DietDayHome() {
 
   const fetchIngredients = async (url: string) =>
     await axios.get(url).then((response) => response.data);
-/*
+
+  const mealPeriodListToFetch: MealPeriod[] = ['breakfast', 'lunch', 'dinner', 'snacks'];
+
   useEffect(() => {
-    fetchIngredients('http://localhost:8080/getBreakfastIngradients').then(
-      setSelectedOptionBreakfast
-    );
-    fetchIngredients('http://localhost:8080/getLunchIngredients').then(setSelectedOptionLunch);
-    fetchIngredients('http://localhost:8080/getDinnerIngradients').then(setSelectedOptionDinner);
-    fetchIngredients('http://localhost:8080/getSnacksIngradients').then(setSelectedOptionSnacks);
+    mealPeriodListToFetch.forEach((mealPeriod) => {
+      fetchIngredients(`http://localhost:8080/getIngredients/${mealPeriod}`).then(
+        (ingredients: ingredient[]) => {
+          ingredients.forEach((ing) => addIngredient(mealPeriod, ing));
+        }
+      );
+    });
   }, []);
-*/
-
-useEffect(() => {
-  fetchIngredients('http://localhost:8080/getIngredients/breakfast').then(
-    setSelectedOptionBreakfast
-  );
-  fetchIngredients('http://localhost:8080/getIngredients/lunch').then(setSelectedOptionLunch);
-  fetchIngredients('http://localhost:8080/getIngredients/dinner').then(setSelectedOptionDinner);
-  fetchIngredients('http://localhost:8080/getIngredients/snacks').then(setSelectedOptionSnacks);
-}, []);
-
-
 
   useEffect(() => {
-    setBreakfastSum(roundSum(computeSum(selectedOptionBreakfast)));
-  }, [selectedOptionBreakfast]);
+    setBreakfastSum(roundSum(computeSum(selectedMealPeriod.breakfast)));
+  }, [selectedMealPeriod.breakfast]);
 
   useEffect(() => {
-    setLunchSum(roundSum(computeSum(selectedOptionLunch)));
-  }, [selectedOptionLunch]);
+    setLunchSum(roundSum(computeSum(selectedMealPeriod.lunch)));
+  }, [selectedMealPeriod.lunch]);
 
   useEffect(() => {
-    setDinnerSum(roundSum(computeSum(selectedOptionDinner)));
-  }, [selectedOptionDinner]);
+    setDinnerSum(roundSum(computeSum(selectedMealPeriod.dinner)));
+  }, [selectedMealPeriod.dinner]);
 
   useEffect(() => {
-    setSnacksSum(roundSum(computeSum(selectedOptionSnacks)));
-  }, [selectedOptionSnacks]);
+    setSnacksSum(roundSum(computeSum(selectedMealPeriod.snacks)));
+  }, [selectedMealPeriod.snacks]);
 
   // Obliczanie sumy zbiorczej
   useEffect(() => {
@@ -132,7 +148,7 @@ useEffect(() => {
   };
 
   const deleteIngredient = async (
-    mealType: MealType,
+    mealType: MealPeriod,
     mealPeriodIngredientId: number | undefined
   ) => {
     if (mealPeriodIngredientId === undefined) return;
@@ -146,33 +162,23 @@ useEffect(() => {
       });
       if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
-      if (mealType === 'breakfast') {
-        setSelectedOptionBreakfast((prev) =>
-          prev.filter((ingredient) => ingredient.mealPeriodIngredientId !== mealPeriodIngredientId)
-        );
-      } else if (mealType === 'lunch') {
-        setSelectedOptionLunch((prev) =>
-          prev.filter((ingredient) => ingredient.mealPeriodIngredientId !== mealPeriodIngredientId)
-        );
-      } else if (mealType === 'dinner') {
-        setSelectedOptionDinner((prev) =>
-          prev.filter((ingredient) => ingredient.mealPeriodIngredientId !== mealPeriodIngredientId)
-        );
-      } else if (mealType === 'snacks') {
-        setSelectedOptionSnacks((prev) =>
-          prev.filter((ingredient) => ingredient.mealPeriodIngredientId !== mealPeriodIngredientId)
-        );
-      }
+      // Aktualizujemy stan selectedMealPeriod, usuwając dany składnik
+      setSelectedMealPeriod((prev) => ({
+        ...prev,
+        [mealType]: prev[mealType].filter(
+          (ingredient) => ingredient.mealPeriodIngredientId !== mealPeriodIngredientId
+        ),
+      }));
     } catch (error) {
       console.error(`Error deleting ingredient for ${mealType}:`, error);
     }
   };
 
-  const ingredientsMap: Record<MealType, ingredient[]> = {
-    breakfast: selectedOptionBreakfast,
-    lunch: selectedOptionLunch,
-    dinner: selectedOptionDinner,
-    snacks: selectedOptionSnacks,
+  const ingredientsMap: Record<MealPeriod, ingredient[]> = {
+    breakfast: selectedMealPeriod.breakfast,
+    lunch: selectedMealPeriod.lunch,
+    dinner: selectedMealPeriod.dinner,
+    snacks: selectedMealPeriod.snacks,
   };
 
   // Funkcja do generowania danych do wykresu
@@ -216,7 +222,7 @@ useEffect(() => {
     { name: 'przekąsek', sumData: snacksSum },
   ];
 
-  const mealTypes: MealType[] = ['breakfast', 'dinner', 'lunch', 'snacks'];
+  const mealTypes: MealPeriod[] = ['breakfast', 'dinner', 'lunch', 'snacks'];
 
   // Przygotowanie danych do wykresu zbiorczego
   const { totalMacros: totalSumMacros, data: totalChartData } = getMacroChartData(totalSum);
@@ -226,19 +232,11 @@ useEffect(() => {
       <h2 style={headerStyle}>Mój dziennik żywieniowy</h2>
       <div style={innerContainerStyle}>
         {/* MealSections z większym prostokątem po prawej stronie */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            marginTop: '20px',
-          }}
-        >
+        <div style={outerFlexContainerStyle}>
           {/* Lewa strona: MealSections */}
-          <div style={{ flex: '0 0 47.5%', marginRight: '2%' }}>
-            {/* MealSections */}
+          <div style={leftSideMealSectionsStyle}>
             {mealTypes.map((mealType, index) => (
-              <div key={index} style={{ marginBottom: '10px' }}>
+              <div key={index} style={mealSectionItemStyle}>
                 <MealSection
                   mealType={mealType}
                   ingredients={ingredientsMap[mealType]}
@@ -249,10 +247,9 @@ useEffect(() => {
           </div>
           {/* Prawa strona: Większy prostokąt */}
           <div style={rightSideRectangleStyle}>
-            {/* Tutaj dodajemy sumę zbiorczą i wykres */}
             <SumTable mealName="wszystkich posiłków" sumData={totalSum} />
             {totalSumMacros > 0 ? (
-              <div style={{ width: '300px', height: '300px', marginTop: '20px' }}>
+              <div style={pieChartContainerStyle}>
                 <Pie data={totalChartData} options={chartOptions} />
               </div>
             ) : (
@@ -273,13 +270,12 @@ useEffect(() => {
           {mealSums.map((meal, index) => {
             const { totalMacros, data } = getMacroChartData(meal.sumData);
             return (
-              <div key={index} style={{ flex: '0 0 49%', marginBottom: '10px' }}>
+              <div key={index} style={mealSumItemStyle}>
                 <div style={sumTableWrapperStyle}>
                   <SumTable mealName={meal.name} sumData={meal.sumData} />
-                  {/* Dodaj wykres kołowy lub tekst informacyjny */}
-                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                  <div style={pieChartCenterStyle}>
                     {totalMacros > 0 ? (
-                      <div style={{ width: '300px', height: '300px' }}>
+                      <div style={pieChartContainerStyle2}>
                         <Pie data={data} options={chartOptions} />
                       </div>
                     ) : (
