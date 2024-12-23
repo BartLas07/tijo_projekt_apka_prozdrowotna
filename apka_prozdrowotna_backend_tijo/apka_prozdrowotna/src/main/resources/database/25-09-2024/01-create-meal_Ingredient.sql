@@ -183,3 +183,16 @@ INSERT INTO meal_Ingredient (meal_ingredient_name, protein, carbohydrates, sodiu
                                                                                                                         ('Winogrona', 0.6, 18.1, 2, 69, 0.2, 0, 15.5, 0.9),
                                                                                                                         ('Ziemniaki', 2.0, 17.0, 6, 77, 0.1, 0, 0.8, 2.2),
                                                                                                                         ('Żurawina', 0.4, 12.2, 2, 46, 0.1, 0, 4.0, 3.6);
+
+
+
+--liquibase formatted sql
+--changeset blas:16
+
+CREATE TABLE IF NOT EXISTS user_details
+(
+    user_details_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    calorie_pool INTEGER,
+    recommended_hydration DOUBLE,
+    bmi DOUBLE
+);

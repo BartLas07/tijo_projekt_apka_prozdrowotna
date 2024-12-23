@@ -1,12 +1,8 @@
 package com.example.apka_prozdrowotna.controller;
 
 import com.example.apka_prozdrowotna.model.dto.MealIngredientDTO;
-import com.example.apka_prozdrowotna.repository.MealIngredientRepository;
+
 import com.example.apka_prozdrowotna.service.for_controller.DailyDietHomeService;
-import com.example.apka_prozdrowotna.service.meal_perdion.BreakfastService;
-import com.example.apka_prozdrowotna.service.meal_perdion.DinnerService;
-import com.example.apka_prozdrowotna.service.meal_perdion.LunchService;
-import com.example.apka_prozdrowotna.service.meal_perdion.SnacksService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -35,6 +31,8 @@ public class DailyDietHomeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
 
     @DeleteMapping("/deleteIngredient/{mealPeriod}/{ingredientFromMealPeriodId}")
     public ResponseEntity<?> deleteBreakfastIngredient(@PathVariable String mealPeriod,@PathVariable Integer ingredientFromMealPeriodId) {
