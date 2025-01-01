@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/apka_prozdrowotna/apka_prozdrowotna.iml" filepath="$PROJECT_DIR$/apka_prozdrowotna/apka_prozdrowotna.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/apka_prozdrowotna_backend_tijo.iml" filepath="$PROJECT_DIR$/.idea/apka_prozdrowotna_backend_tijo.iml" />
     </modules>
   </component>

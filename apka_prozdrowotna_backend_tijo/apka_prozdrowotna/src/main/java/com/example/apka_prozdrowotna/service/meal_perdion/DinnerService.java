@@ -14,17 +14,14 @@ public class DinnerService {
     private final DinnerRepository dinnerRepository;
 
     @Transactional
-    public Dinner saveDinner(Integer meal_ingredient_id, Integer quantity_of_grams) {
-        Dinner dinner = new Dinner(meal_ingredient_id, quantity_of_grams);
+    public Dinner saveMealIngredientForDinner(Integer mealIngredientId, Integer mealIngredientQuantityInGrams) {
+        Dinner dinner = new Dinner(mealIngredientId, mealIngredientQuantityInGrams);
         return dinnerRepository.save(dinner);
     }
 
     @Transactional
-    public void deleteDinner(Integer typeOfMealIngredientId) {
-        dinnerRepository.deleteALlByDinner_id(typeOfMealIngredientId);
+    public void deleteMealIngredientFromDinner(Integer mealIngredientFromDinnerId) {
+        dinnerRepository.deleteALlByMealIngredientForDinnerId(mealIngredientFromDinnerId);
     }
 
-    public MealIngredientDTO getSumAllDinnerIngredients() {
-        return dinnerRepository.sumAllDinnerIngredients();
-    }
 }

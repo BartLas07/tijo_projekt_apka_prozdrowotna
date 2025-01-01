@@ -9,7 +9,7 @@ import lombok.Setter;
 public class MealIngredientDTO {
     private Integer mealIngredientId;
     private Integer mealPeriodIngredientId;
-    private String ingredient;
+    private String mealIngredientName;
     private Double protein;
     private Double carbohydrates;
     private Double sodium;
@@ -19,10 +19,10 @@ public class MealIngredientDTO {
     private Double sugar;
     private Double fiber;
 
-    public MealIngredientDTO(Integer mealIngredientId, Integer mealPeriodIngredientId, String ingredient, Double protein, Double carbohydrates, Double sodium, Double calories, Double fats, Double cholesterol, Double sugar, Double fiber) {
+    public MealIngredientDTO(Integer mealIngredientId, Integer mealPeriodIngredientId, String mealIngredientName, Double protein, Double carbohydrates, Double sodium, Double calories, Double fats, Double cholesterol, Double sugar, Double fiber) {
         this.mealPeriodIngredientId = mealPeriodIngredientId;
         this.mealIngredientId = mealIngredientId;
-        this.ingredient = ingredient;
+        this.mealIngredientName = mealIngredientName;
         this.protein = protein;
         this.carbohydrates = carbohydrates;
         this.sodium = sodium;

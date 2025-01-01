@@ -5,7 +5,7 @@
 CREATE TABLE IF NOT EXISTS meal_Ingredient
 (
     meal_ingredient_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    ingredient VARCHAR(20) NOT NULL,
+    meal_ingredient_name VARCHAR(20) NOT NULL,
     protein DOUBLE ,
     carbohydrates DOUBLE ,
     sodium DOUBLE ,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS meal_Ingredient
 
 CREATE TABLE IF NOT EXISTS breakfast
 (
-    breakfast_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    meal_ingredient_for_breakfast_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     meal_ingredient_id INTEGER NOT NULL,
     CONSTRAINT breakfast_fk
         FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS breakfast
 
 CREATE TABLE IF NOT EXISTS lunch
 (
-    lunch_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    meal_ingredient_for_lunch_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     meal_ingredient_id INTEGER NOT NULL,
     CONSTRAINT lunch_fk
         FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS lunch
 
 CREATE TABLE IF NOT EXISTS dinner
 (
-    dinner_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    meal_ingredient_for_dinner_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     meal_ingredient_id INTEGER NOT NULL,
     CONSTRAINT dinner_fk
         FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS dinner
 
 CREATE TABLE IF NOT EXISTS snacks
 (
-    snacks_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    meal_ingredient_for_snacks_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     meal_ingredient_id INTEGER NOT NULL,
     CONSTRAINT snacks_fk
         FOREIGN KEY (meal_ingredient_id) REFERENCES meal_Ingredient(meal_ingredient_id)
@@ -92,14 +92,14 @@ ALTER TABLE lunch
 --liquibase formatted sql
 --changeset your_name:13
 
-ALTER TABLE breakfast ADD COLUMN meal_quantity_of_grams INTEGER NOT NULL;
-ALTER TABLE lunch ADD COLUMN meal_quantity_of_grams INTEGER NOT NULL;
-ALTER TABLE dinner ADD COLUMN meal_quantity_of_grams INTEGER NOT NULL;
-ALTER TABLE snacks ADD COLUMN meal_quantity_of_grams INTEGER NOT NULL;
+ALTER TABLE breakfast ADD COLUMN meal_ingredient_quantity_in_grams INTEGER NOT NULL;
+ALTER TABLE lunch ADD COLUMN meal_ingredient_quantity_in_grams INTEGER NOT NULL;
+ALTER TABLE dinner ADD COLUMN meal_ingredient_quantity_in_grams INTEGER NOT NULL;
+ALTER TABLE snacks ADD COLUMN meal_ingredient_quantity_in_grams INTEGER NOT NULL;
 
 --liquibase formatted sql
 --changeset your_name:14
-INSERT INTO meal_Ingredient (ingredient, protein, carbohydrates, sodium, calories, fats, cholesterol, sugar, fiber) VALUES
+INSERT INTO meal_Ingredient (meal_ingredient_name, protein, carbohydrates, sodium, calories, fats, cholesterol, sugar, fiber) VALUES
                                                                                                                         ('Agrest', 1.3, 10.2, 1, 44, 0.6, 0, 9.1, 4.3),
                                                                                                                         ('Ananas', 0.5, 13.1, 1, 50, 0.1, 0, 10.0, 1.4),
                                                                                                                         ('Awokado', 2.0, 8.5, 7, 160, 15.0, 0, 0.7, 6.7),
@@ -146,7 +146,7 @@ INSERT INTO meal_Ingredient (ingredient, protein, carbohydrates, sodium, calorie
 
 --liquibase formatted sql
 --changeset your_name:15
-INSERT INTO meal_Ingredient (ingredient, protein, carbohydrates, sodium, calories, fats, cholesterol, sugar, fiber) VALUES
+INSERT INTO meal_Ingredient (meal_ingredient_name, protein, carbohydrates, sodium, calories, fats, cholesterol, sugar, fiber) VALUES
                                                                                                                         ('Migdały', 21.0, 21.6, 1, 579, 49.4, 0, 4.4, 12.5),
                                                                                                                         ('Morele', 1.4, 11.1, 1, 48, 0.4, 0, 9.2, 2.0),
                                                                                                                         ('Ogórek', 0.7, 3.6, 2, 16, 0.1, 0, 1.7, 0.5),
@@ -183,3 +183,16 @@ INSERT INTO meal_Ingredient (ingredient, protein, carbohydrates, sodium, calorie
                                                                                                                         ('Winogrona', 0.6, 18.1, 2, 69, 0.2, 0, 15.5, 0.9),
                                                                                                                         ('Ziemniaki', 2.0, 17.0, 6, 77, 0.1, 0, 0.8, 2.2),
                                                                                                                         ('Żurawina', 0.4, 12.2, 2, 46, 0.1, 0, 4.0, 3.6);
+
+
+
+--liquibase formatted sql
+--changeset blas:16
+
+CREATE TABLE IF NOT EXISTS user_details
+(
+    user_details_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    calorie_pool INTEGER,
+    recommended_hydration DOUBLE,
+    bmi DOUBLE
+);

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import MealSection from '../components/MealSection';
 import SumTable from '../components/SumTable';
@@ -9,19 +10,48 @@ import {
   sumTableWrapperStyle,
   rightSideRectangleStyle,
 } from '../styles/styles';
+import {
+  outerFlexContainerStyle,
+  leftSideMealSectionsStyle,
+  mealSectionItemStyle,
+  mealSumItemStyle,
+  pieChartContainerStyle,
+  pieChartCenterStyle,
+  pieChartContainerStyle2,
+} from '../styles/DietDayHomeStyles';
 import { ingredient } from '../custom_types/ingredient';
 import { Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, Legend } from 'chart.js';
 
 Chart.register(ArcElement, Legend);
 
-type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snacks';
+type IngredientsForMealPeriod = {
+  breakfast: ingredient[];
+  lunch: ingredient[];
+  dinner: ingredient[];
+  snacks: ingredient[];
+};
+
+type MealPeriod = keyof IngredientsForMealPeriod;
 
 function DietDayHome() {
-  const [selectedOptionBreakfast, setSelectedOptionBreakfast] = useState<ingredient[]>([]);
-  const [selectedOptionLunch, setSelectedOptionLunch] = useState<ingredient[]>([]);
-  const [selectedOptionDinner, setSelectedOptionDinner] = useState<ingredient[]>([]);
-  const [selectedOptionSnacks, setSelectedOptionSnacks] = useState<ingredient[]>([]);
+  const [selectedMealPeriod, setSelectedMealPeriod] = useState<IngredientsForMealPeriod>({
+    breakfast: [],
+    lunch: [],
+    dinner: [],
+    snacks: [],
+  });
+
+  const [bmi, setBmi] = useState<number | null>(null);
+  const [caloriePool, setCaloriePool] = useState<number | null>(null);
+  const [recommendedHydration, setRecommendedHydration] = useState<number | null>(null);
+
+  const addIngredient = (mealType: MealPeriod, ingredient: ingredient) => {
+    setSelectedMealPeriod((prev) => ({
+      ...prev,
+      [mealType]: [...prev[mealType], ingredient],
+    }));
+  };
 
   const initialSum = {
     protein: 0,
@@ -40,35 +70,66 @@ function DietDayHome() {
   const [snacksSum, setSnacksSum] = useState(initialSum);
   const [totalSum, setTotalSum] = useState(initialSum);
 
-  const fetchIngredients = async (url: string) =>
-    await axios.get(url).then((response) => response.data);
+  const mealPeriodListToFetch: MealPeriod[] = ['breakfast', 'lunch', 'dinner', 'snacks'];
 
   useEffect(() => {
-    fetchIngredients('http://localhost:8080/getBreakfastIngradients').then(
-      setSelectedOptionBreakfast
-    );
-    fetchIngredients('http://localhost:8080/getLunchIngredients').then(setSelectedOptionLunch);
-    fetchIngredients('http://localhost:8080/getDinnerIngradients').then(setSelectedOptionDinner);
-    fetchIngredients('http://localhost:8080/getSnacksIngradients').then(setSelectedOptionSnacks);
+    const fetchBmi = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/getBmi');
+        setBmi(response.data.bmi);
+      } catch (error) {
+        console.error('Error fetching BMI:', error);
+      }
+    };
+
+    const fetchCaloriePool = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/getCaloriePool');
+        setCaloriePool(response.data.caloriePool);
+      } catch (error) {
+        console.error('Error fetching calorie pool:', error);
+      }
+    };
+
+    const fetchRecommendedHydration = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/getRecommendedHydration');
+        setRecommendedHydration(response.data.recommendedHydration);
+      } catch (error) {
+        console.error('Error fetching recommended hydration:', error);
+      }
+    };
+
+    fetchBmi();
+    fetchCaloriePool();
+    fetchRecommendedHydration();
+
+    mealPeriodListToFetch.forEach((mealPeriod) => {
+      axios
+        .get(`http://localhost:8080/getIngredients/${mealPeriod}`)
+        .then((response) => {
+          response.data.forEach((ing: ingredient) => addIngredient(mealPeriod, ing));
+        })
+        .catch((error) => console.error(`Error fetching ingredients for ${mealPeriod}:`, error));
+    });
   }, []);
 
   useEffect(() => {
-    setBreakfastSum(roundSum(computeSum(selectedOptionBreakfast)));
-  }, [selectedOptionBreakfast]);
+    setBreakfastSum(roundSum(computeSum(selectedMealPeriod.breakfast)));
+  }, [selectedMealPeriod.breakfast]);
 
   useEffect(() => {
-    setLunchSum(roundSum(computeSum(selectedOptionLunch)));
-  }, [selectedOptionLunch]);
+    setLunchSum(roundSum(computeSum(selectedMealPeriod.lunch)));
+  }, [selectedMealPeriod.lunch]);
 
   useEffect(() => {
-    setDinnerSum(roundSum(computeSum(selectedOptionDinner)));
-  }, [selectedOptionDinner]);
+    setDinnerSum(roundSum(computeSum(selectedMealPeriod.dinner)));
+  }, [selectedMealPeriod.dinner]);
 
   useEffect(() => {
-    setSnacksSum(roundSum(computeSum(selectedOptionSnacks)));
-  }, [selectedOptionSnacks]);
+    setSnacksSum(roundSum(computeSum(selectedMealPeriod.snacks)));
+  }, [selectedMealPeriod.snacks]);
 
-  // Obliczanie sumy zbiorczej
   useEffect(() => {
     const total = computeTotalSum([breakfastSum, lunchSum, dinnerSum, snacksSum]);
     setTotalSum(roundSum(total));
@@ -79,15 +140,15 @@ function DietDayHome() {
       return { ...initialSum };
     } else {
       return ingredients.reduce(
-        (acc, ingredient) => ({
-          protein: acc.protein + ingredient.protein,
-          sodium: acc.sodium + ingredient.sodium,
-          carbohydrates: acc.carbohydrates + ingredient.carbohydrates,
-          fats: acc.fats + ingredient.fats,
-          cholesterol: acc.cholesterol + ingredient.cholesterol,
-          sugar: acc.sugar + ingredient.sugar,
-          fiber: acc.fiber + ingredient.fiber,
-          calories: acc.calories + ingredient.calories,
+        (acc, ing) => ({
+          protein: acc.protein + ing.protein,
+          sodium: acc.sodium + ing.sodium,
+          carbohydrates: acc.carbohydrates + ing.carbohydrates,
+          fats: acc.fats + ing.fats,
+          cholesterol: acc.cholesterol + ing.cholesterol,
+          sugar: acc.sugar + ing.sugar,
+          fiber: acc.fiber + ing.fiber,
+          calories: acc.calories + ing.calories,
         }),
         { ...initialSum }
       );
@@ -120,57 +181,40 @@ function DietDayHome() {
   };
 
   const deleteIngredient = async (
-    mealType: MealType,
+    mealType: MealPeriod,
     mealPeriodIngredientId: number | undefined
   ) => {
     if (mealPeriodIngredientId === undefined) return;
-
-    const deleteUrl = `http://localhost:8080/${mealType}/${mealPeriodIngredientId}`;
-
+    const deleteUrl = `http://localhost:8080/deleteIngredient/${mealType}/${mealPeriodIngredientId}`;
     try {
       const response = await fetch(deleteUrl, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });
       if (!response.ok) throw new Error(`Server error: ${response.status}`);
-
-      if (mealType === 'breakfast') {
-        setSelectedOptionBreakfast((prev) =>
-          prev.filter((ingredient) => ingredient.mealPeriodIngredientId !== mealPeriodIngredientId)
-        );
-      } else if (mealType === 'lunch') {
-        setSelectedOptionLunch((prev) =>
-          prev.filter((ingredient) => ingredient.mealPeriodIngredientId !== mealPeriodIngredientId)
-        );
-      } else if (mealType === 'dinner') {
-        setSelectedOptionDinner((prev) =>
-          prev.filter((ingredient) => ingredient.mealPeriodIngredientId !== mealPeriodIngredientId)
-        );
-      } else if (mealType === 'snacks') {
-        setSelectedOptionSnacks((prev) =>
-          prev.filter((ingredient) => ingredient.mealPeriodIngredientId !== mealPeriodIngredientId)
-        );
-      }
+      setSelectedMealPeriod((prev) => ({
+        ...prev,
+        [mealType]: prev[mealType].filter(
+          (i) => i.mealPeriodIngredientId !== mealPeriodIngredientId
+        ),
+      }));
     } catch (error) {
       console.error(`Error deleting ingredient for ${mealType}:`, error);
     }
   };
 
-  const ingredientsMap: Record<MealType, ingredient[]> = {
-    breakfast: selectedOptionBreakfast,
-    lunch: selectedOptionLunch,
-    dinner: selectedOptionDinner,
-    snacks: selectedOptionSnacks,
+  const ingredientsMap: Record<MealPeriod, ingredient[]> = {
+    breakfast: selectedMealPeriod.breakfast,
+    lunch: selectedMealPeriod.lunch,
+    dinner: selectedMealPeriod.dinner,
+    snacks: selectedMealPeriod.snacks,
   };
 
-  // Funkcja do generowania danych do wykresu
   const getMacroChartData = (sumData: typeof initialSum) => {
     const totalMacros = sumData.protein + sumData.carbohydrates + sumData.fats;
-
     const proteinPercentage = totalMacros ? (sumData.protein / totalMacros) * 100 : 0;
     const carbsPercentage = totalMacros ? (sumData.carbohydrates / totalMacros) * 100 : 0;
     const fatsPercentage = totalMacros ? (sumData.fats / totalMacros) * 100 : 0;
-
     return {
       totalMacros,
       data: {
@@ -186,17 +230,40 @@ function DietDayHome() {
     };
   };
 
+
   const chartOptions = {
     plugins: {
       legend: {
         display: true,
         position: 'bottom' as const,
+        labels: {
+          generateLabels: (chart: any) => {
+            const data = chart.data;
+            if (!data.labels.length || !data.datasets.length) return [];
+
+            const dataset = data.datasets[0];
+            const meta = chart.getDatasetMeta(0);
+
+            return data.labels.map((label: string, i: number) => {
+              const value = dataset.data[i];
+              const total = dataset.data.reduce((acc: number, val: number) => acc + val, 0);
+              const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
+
+              return {
+                text: `${label} (${percentage}%)`,
+                fillStyle: dataset.backgroundColor[i],
+                hidden: meta.data[i].hidden,
+                index: i,
+              };
+            });
+          },
+        },
       },
     },
     maintainAspectRatio: false,
   };
 
-  // Lista posiłków do wyświetlenia
+
   const mealSums = [
     { name: 'śniadania', sumData: breakfastSum },
     { name: 'obiadu', sumData: dinnerSum },
@@ -204,29 +271,47 @@ function DietDayHome() {
     { name: 'przekąsek', sumData: snacksSum },
   ];
 
-  const mealTypes: MealType[] = ['breakfast', 'dinner', 'lunch', 'snacks'];
+  const mealTypes: MealPeriod[] = ['breakfast', 'dinner', 'lunch', 'snacks'];
 
-  // Przygotowanie danych do wykresu zbiorczego
   const { totalMacros: totalSumMacros, data: totalChartData } = getMacroChartData(totalSum);
 
   return (
     <div style={containerStyle}>
       <h2 style={headerStyle}>Mój dziennik żywieniowy</h2>
       <div style={innerContainerStyle}>
-        {/* MealSections z większym prostokątem po prawej stronie */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            marginTop: '20px',
-          }}
-        >
-          {/* Lewa strona: MealSections */}
-          <div style={{ flex: '0 0 47.5%', marginRight: '2%' }}>
-            {/* MealSections */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
+            <div style={{ display: 'flex', marginBottom: '16px' }}>
+              <label style={{ width: '400px' }}>BMI:</label>
+              <span>{bmi !== null && !isNaN(bmi) ? bmi : 'brak'}</span>
+            </div>
+            <div style={{ display: 'flex', marginBottom: '16px' }}>
+              <label style={{ width: '400px' }}>Zalecana pula kalorii (w kcal):</label>
+              <span>{caloriePool !== null && !isNaN(caloriePool) ? caloriePool : 'brak'}</span>
+            </div>
+            <div style={{ display: 'flex', marginBottom: '16px' }}>
+              <label style={{ width: '400px' }}>Rekomendowana ilość nawodnienia (w litrach):</label>
+              <span>{recommendedHydration !== null && !isNaN(recommendedHydration) ? recommendedHydration : 'brak'}</span>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <Link to="/bmiForm">
+              <button>Oblicz BMI</button>
+            </Link>
+            <Link to="/caloriePoolForm">
+              <button>Oblicz zalecaną pulę kalorii</button>
+            </Link>
+            <Link to="/recommendedHydrationForm">
+              <button>Oblicz rekomendowane nawodnienie</button>
+            </Link>
+          </div>
+        </div>
+
+        <div style={outerFlexContainerStyle}>
+          <div style={leftSideMealSectionsStyle}>
             {mealTypes.map((mealType, index) => (
-              <div key={index} style={{ marginBottom: '10px' }}>
+              <div key={index} style={mealSectionItemStyle}>
                 <MealSection
                   mealType={mealType}
                   ingredients={ingredientsMap[mealType]}
@@ -235,12 +320,10 @@ function DietDayHome() {
               </div>
             ))}
           </div>
-          {/* Prawa strona: Większy prostokąt */}
           <div style={rightSideRectangleStyle}>
-            {/* Tutaj dodajemy sumę zbiorczą i wykres */}
             <SumTable mealName="wszystkich posiłków" sumData={totalSum} />
             {totalSumMacros > 0 ? (
-              <div style={{ width: '300px', height: '300px', marginTop: '20px' }}>
+              <div style={pieChartContainerStyle}>
                 <Pie data={totalChartData} options={chartOptions} />
               </div>
             ) : (
@@ -249,7 +332,6 @@ function DietDayHome() {
           </div>
         </div>
 
-        {/* Sumy pod resztą zawartości */}
         <div
           style={{
             display: 'flex',
@@ -261,13 +343,12 @@ function DietDayHome() {
           {mealSums.map((meal, index) => {
             const { totalMacros, data } = getMacroChartData(meal.sumData);
             return (
-              <div key={index} style={{ flex: '0 0 49%', marginBottom: '10px' }}>
+              <div key={index} style={mealSumItemStyle}>
                 <div style={sumTableWrapperStyle}>
                   <SumTable mealName={meal.name} sumData={meal.sumData} />
-                  {/* Dodaj wykres kołowy lub tekst informacyjny */}
-                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                  <div style={pieChartCenterStyle}>
                     {totalMacros > 0 ? (
-                      <div style={{ width: '300px', height: '300px' }}>
+                      <div style={pieChartContainerStyle2}>
                         <Pie data={data} options={chartOptions} />
                       </div>
                     ) : (

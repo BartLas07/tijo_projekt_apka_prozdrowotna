@@ -4,12 +4,12 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-const GET_INGREDIENTS_URL: string = 'http://localhost:8080/getIngradientList';
+const GET_INGREDIENTS_URL: string = 'http://localhost:8080/getIngredientList';
 
-const POST_BREAKFAST_INGRADIENTS: string = 'http://localhost:8080/postBreakfastIngredients';
-const POST_DINNER_INGRADIENTS: string = 'http://localhost:8080/postDinnerIngradients';
-const POST_LUNCH_INGRADIENTS: string = 'http://localhost:8080/postLunchIngredients';
-const POST_SNACKS_INGRADIENTS: string = 'http://localhost:8080/postSnacksIngradients';
+const POST_BREAKFAST_INGRADIENTS: string = 'http://localhost:8080/postIngredientToMealPeriod/breakfast';
+const POST_DINNER_INGRADIENTS: string = 'http://localhost:8080/postIngredientToMealPeriod/dinner';
+const POST_LUNCH_INGRADIENTS: string = 'http://localhost:8080/postIngredientToMealPeriod/lunch';
+const POST_SNACKS_INGRADIENTS: string = 'http://localhost:8080/postIngredientToMealPeriod/snacks';
 
 type Ingredient = {
   value: string;
@@ -17,7 +17,7 @@ type Ingredient = {
 };
 
 type IngredientWithQuantity = Ingredient & {
-  quantity_of_grams: number;
+  mealIngredientQuantityInGrams: number;
 };
 
 const ingredientList: Ingredient[] = [];
@@ -43,7 +43,7 @@ function SearchIngredientPage() {
 
     const postData: IngredientWithQuantity = {
       ...selectedOption,
-      quantity_of_grams: Number(quantity),
+      mealIngredientQuantityInGrams: Number(quantity),
     };
 
     let postUrl: string = POST_DINNER_INGRADIENTS;

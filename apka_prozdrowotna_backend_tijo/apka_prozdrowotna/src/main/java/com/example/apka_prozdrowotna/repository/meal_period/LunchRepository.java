@@ -10,6 +10,6 @@ public interface LunchRepository extends JpaRepository<Lunch, Integer> {
 
 
     @Modifying
-    @Query("DELETE FROM Lunch l WHERE l.lunch_id = :typeOfMealIngredientId")
-    void deleteALlByLunch_id(@Param("typeOfMealIngredientId") Integer typeOfMealIngredientId);
+    @Query("DELETE FROM Lunch l WHERE l.mealIngredientForLunchId = :mealIngredientForMealPeriodId")
+    void deleteALlByMealIngredientForLunchId(@Param("mealIngredientForMealPeriodId") Integer mealIngredientForMealPeriodId);
 }
