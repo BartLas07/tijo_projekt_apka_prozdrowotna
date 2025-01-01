@@ -70,7 +70,7 @@ const CaloriePoolForm: React.FC = () => {
           value={age}
           onChange={(e) => setAge(e.target.value)}
           style={{ flex: 1 }}
-          placeholder="Podaj wzrost"
+          placeholder="Podaj wiek"
         />
       </div>
 

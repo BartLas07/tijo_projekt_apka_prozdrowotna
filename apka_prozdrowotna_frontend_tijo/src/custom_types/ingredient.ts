@@ -1,7 +1,7 @@
 export type ingredient={
     mealIngredientId: number;
     mealPeriodIngredientId: number;
-    ingredient: string;
+    mealIngredientName: string;
     sodium: number;
     carbohydrates: number;
     protein: number;

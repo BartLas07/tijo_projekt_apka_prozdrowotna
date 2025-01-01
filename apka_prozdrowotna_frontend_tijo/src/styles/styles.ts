@@ -42,7 +42,7 @@ export const sumTableWrapperStyle: CSSProperties = {
 };
 
 export const rightSideRectangleStyle: CSSProperties = {
-  flex: '0 0 48%',
+  flex: '0 0 46%',
   backgroundColor: '#d0e0d0',
   borderRadius: '5px',
   padding: '10px',

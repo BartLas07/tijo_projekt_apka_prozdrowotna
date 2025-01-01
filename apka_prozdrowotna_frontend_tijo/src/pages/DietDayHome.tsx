@@ -42,7 +42,6 @@ function DietDayHome() {
     snacks: [],
   });
 
-  // **Oddzielne zmienne stanu dla bmi, caloriePool i recommendedHydration**
   const [bmi, setBmi] = useState<number | null>(null);
   const [caloriePool, setCaloriePool] = useState<number | null>(null);
   const [recommendedHydration, setRecommendedHydration] = useState<number | null>(null);
@@ -74,8 +73,6 @@ function DietDayHome() {
   const mealPeriodListToFetch: MealPeriod[] = ['breakfast', 'lunch', 'dinner', 'snacks'];
 
   useEffect(() => {
-
-
     const fetchBmi = async () => {
       try {
         const response = await axios.get('http://localhost:8080/getBmi');
@@ -106,7 +103,6 @@ function DietDayHome() {
     fetchBmi();
     fetchCaloriePool();
     fetchRecommendedHydration();
-
 
     mealPeriodListToFetch.forEach((mealPeriod) => {
       axios
@@ -234,15 +230,39 @@ function DietDayHome() {
     };
   };
 
+
   const chartOptions = {
     plugins: {
       legend: {
         display: true,
         position: 'bottom' as const,
+        labels: {
+          generateLabels: (chart: any) => {
+            const data = chart.data;
+            if (!data.labels.length || !data.datasets.length) return [];
+
+            const dataset = data.datasets[0];
+            const meta = chart.getDatasetMeta(0);
+
+            return data.labels.map((label: string, i: number) => {
+              const value = dataset.data[i];
+              const total = dataset.data.reduce((acc: number, val: number) => acc + val, 0);
+              const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
+
+              return {
+                text: `${label} (${percentage}%)`,
+                fillStyle: dataset.backgroundColor[i],
+                hidden: meta.data[i].hidden,
+                index: i,
+              };
+            });
+          },
+        },
       },
     },
     maintainAspectRatio: false,
   };
+
 
   const mealSums = [
     { name: 'śniadania', sumData: breakfastSum },
@@ -261,19 +281,18 @@ function DietDayHome() {
       <div style={innerContainerStyle}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
-          <div style={{ display: 'flex', marginBottom: '16px' }}>
-          <label style={{ width: '400px' }}>BMI:</label>
-          <span>{bmi !== null && !isNaN(bmi) ?   bmi:'brak'}</span>
-        </div>
-        <div style={{ display: 'flex', marginBottom: '16px' }}>
-          <label style={{ width: '400px' }}>Zalecana pula kalorii (w kcal):</label>
-          <span>{caloriePool !== null && !isNaN(caloriePool) ? caloriePool:'brak' }</span>
-        </div>
-        <div style={{ display: 'flex', marginBottom: '16px' }}>
-          <label style={{ width: '400px' }}>Rekomendowana ilość nawodnienia (w litrach):</label>
-          <span>{recommendedHydration !== null && !isNaN(recommendedHydration) ? recommendedHydration:'brak'}</span>
-        </div>
-
+            <div style={{ display: 'flex', marginBottom: '16px' }}>
+              <label style={{ width: '400px' }}>BMI:</label>
+              <span>{bmi !== null && !isNaN(bmi) ? bmi : 'brak'}</span>
+            </div>
+            <div style={{ display: 'flex', marginBottom: '16px' }}>
+              <label style={{ width: '400px' }}>Zalecana pula kalorii (w kcal):</label>
+              <span>{caloriePool !== null && !isNaN(caloriePool) ? caloriePool : 'brak'}</span>
+            </div>
+            <div style={{ display: 'flex', marginBottom: '16px' }}>
+              <label style={{ width: '400px' }}>Rekomendowana ilość nawodnienia (w litrach):</label>
+              <span>{recommendedHydration !== null && !isNaN(recommendedHydration) ? recommendedHydration : 'brak'}</span>
+            </div>
           </div>
 
           <div style={{ display: 'flex', gap: '16px' }}>

@@ -3,8 +3,6 @@ package com.example.apka_prozdrowotna;
 import com.example.apka_prozdrowotna.controller.BmiController;
 import com.example.apka_prozdrowotna.model.dto.UserDetailsDTO;
 import com.example.apka_prozdrowotna.repository.UserDetailsRepository;
-import com.example.apka_prozdrowotna.service.UserDetailsService;
-import com.example.apka_prozdrowotna.service.for_controller.BmiService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

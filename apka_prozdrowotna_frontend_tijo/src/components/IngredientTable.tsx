@@ -43,7 +43,7 @@ const IngredientTable = ({
     <tbody>
       {ingredients.map((ingredient, index) => (
         <tr key={index} style={{ borderBottom: '1px solid #e0e0e0' }}>
-          <td style={{ padding: '6px' }}>{ingredient.ingredient}</td>
+          <td style={{ padding: '6px' }}>{ingredient.mealIngredientName}</td>
           <td style={{ padding: '6px' }}>
             {formatNumber(ingredient.protein)}g
           </td>
@@ -66,7 +66,7 @@ const IngredientTable = ({
             {formatNumber(ingredient.fiber)}g
           </td>
           <td style={{ padding: '6px' }}>
-            {formatNumber(ingredient.calories)}g
+            {formatNumber(ingredient.calories)}kcal
           </td>
           <td>
             <Button
