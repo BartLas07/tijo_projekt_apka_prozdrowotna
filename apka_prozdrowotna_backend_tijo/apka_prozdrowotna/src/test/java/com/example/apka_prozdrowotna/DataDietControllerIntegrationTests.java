@@ -68,7 +68,7 @@ public class DataDietControllerIntegrationTests {
 
     @Autowired
     private DailytDietHomeController2 dailytDietHomeController2;
-    
+
 
     @Test
     @DisplayName("Powinien usunąć składnik z podanego okresu posiłkowego")
