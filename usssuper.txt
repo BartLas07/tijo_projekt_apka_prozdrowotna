@@ -1,0 +1,390 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import {jwtDecode} from 'jwt-decode';
+
+interface DecodedToken {
+  sub: string;
+  userId: number;
+  roles: string;
+  iat: number;
+  exp: number;
+}
+
+type Recipe = {
+  recipeId: number;
+  title: string;
+  text: string;
+};
+
+type CommentAndUserName = {
+    commentId: number;
+    userId: number;
+    userName: string;
+    recipeId: number;
+    text: string;
+  };
+  
+  type LikesAndUserName = {
+    likesId: number;
+    userId: number;
+    userName: string;
+    recipeId: number;
+  };
+
+function RecipesPageForAllUsers() {
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [userId, setUserId] = useState<number | null>(null);
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [currentRecipeId, setCurrentRecipeId] = useState<number | null>(null);
+
+
+  const [likes, setLikes] = useState<LikesAndUserName[]>([]);
+  const [comments, setComments] = useState<CommentAndUserName[]>([]);
+
+  // Pobieranie lajków z endpointu
+  const fetchLikes = async () => {
+    try {
+      const response = await axios.get<LikesAndUserName[]>('http://localhost:8080/getLikesForAllRecipes');
+      setLikes(response.data);
+    } catch (error) {
+      console.error('Błąd podczas pobierania lajków:', error);
+    }
+  };
+
+  // Pobieranie komentarzy z endpointu
+  const fetchComments = async () => {
+    try {
+      const response = await axios.get<CommentAndUserName[]>('http://localhost:8080/getCommentsForAllRecipes');
+      setComments(response.data);
+    } catch (error) {
+      console.error('Błąd podczas pobierania komentarzy:', error);
+    }
+  };
+
+  // Wywołanie fetchów po załadowaniu komponentu
+  useEffect(() => {
+    fetchLikes();
+  }, []);
+
+  useEffect(() => {
+    fetchComments();
+  }, []);
+  
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded: DecodedToken = jwtDecode(token);
+        setUserId(decoded.userId);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:8080/getRecipesFromAllUsers')
+      .then((response) => {
+        setRecipes(response.data);
+      })
+      .catch((error) => {
+        console.error('Błąd podczas pobierania przepisów:', error);
+      });
+  }, []);
+
+  const handleLike = (recipeId: number) => {
+    if (!userId) {
+      console.warn('Brak userId – zaloguj się, aby lajkować');
+      return;
+    }
+    axios
+      .post('http://localhost:8080/postLikes', { userId, recipeId })
+      .then((response) => {
+        console.log(`Like wysłany dla recipeId=${recipeId}:`, response.data);
+      })
+      .catch((error) => {
+        console.error('Błąd przy wysyłaniu Like:', error);
+      });
+  };
+
+  const handleOpenCommentModal = (recipeId: number) => {
+    setCurrentRecipeId(recipeId);
+    setIsCommentModalOpen(true);
+  };
+
+  const handleSubmitComment = () => {
+    if (!userId || currentRecipeId === null) {
+      console.warn('Brak wymaganych informacji (userId lub recipeId)');
+      return;
+    }
+    axios
+      .post('http://localhost:8080/postComment', {
+        text: commentText,
+        recipeId: currentRecipeId,
+        userId: userId,
+      })
+      .then((response) => {
+        console.log('Komentarz wysłany:', response.data);
+      })
+      .catch((error) => {
+        console.error('Błąd przy wysyłaniu komentarza:', error);
+      })
+      .finally(() => {
+        setIsCommentModalOpen(false);
+        setCommentText('');
+        setCurrentRecipeId(null);
+      });
+  };
+
+  return (
+    <div
+      style={{
+        background: 'grey',
+        width: '1500px',
+        margin: '0px -300px',
+        paddingTop: '10px',
+        minHeight: '700px',
+      }}
+    >
+      <h2>Portal Społecznościowy</h2>
+
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-around',
+          background: 'blue',
+          width: '1500px',
+          paddingTop: '30px',
+          paddingBottom: '60px',
+          minHeight: '700px',
+        }}
+      >
+        <div style={{ background: 'green', width: '70%', minHeight: '700px' }}>
+          <h2>Przepisy od wszystkich użytkowników</h2>
+
+          <div
+            style={{
+              background: '#f0f0f0',
+              width: '90%',
+              maxHeight: '600px',
+              overflowY: 'auto',
+              marginTop: '20px',
+              padding: '10px',
+              boxSizing: 'border-box',
+            }}
+          >
+            {recipes.map((recipe) => (
+              <div
+                key={recipe.recipeId}
+                style={{
+                  border: '1px solid #ccc',
+                  marginBottom: '10px',
+                  padding: '10px',
+                  background: '#fff',
+                }}
+              >
+                <h3 style={{ margin: '0 0 5px 0' }}>{recipe.title}</h3>
+                <p style={{ margin: 0 }}>{recipe.text}</p>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginTop: '10px',
+                  }}
+                >
+                  <button
+                    style={{
+                      background: '#4CAF50',
+                      color: 'white',
+                      border: 'none',
+                      padding: '8px 16px',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => handleLike(recipe.recipeId)}
+                  >
+                    Lubię to!
+                  </button>
+                  <button
+                    style={{
+                      background: '#2196F3',
+                      color: 'white',
+                      border: 'none',
+                      padding: '8px 16px',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => handleOpenCommentModal(recipe.recipeId)}
+                  >
+                    Dodaj komentarz
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ background: 'white', width: '20%', minHeight: '700px' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+            }}
+          >
+            <Link to="/addRecipe">
+              <div>
+                <button
+                  style={{
+                    background: '#4CAF50',
+                    color: 'white',
+                    marginTop: '20px',
+                    width: '200px',
+                  }}
+                >
+                  Dodaj przepis
+                </button>
+              </div>
+            </Link>
+            <Link to="/">
+              <div>
+                <button
+                  style={{
+                    background: '#4CAF50',
+                    color: 'white',
+                    marginTop: '20px',
+                    width: '200px',
+                  }}
+                >
+                  Moje przepisy
+                </button>
+              </div>
+            </Link>
+            <Link to="/">
+              <div>
+                <button
+                  style={{
+                    background: '#4CAF50',
+                    color: 'white',
+                    marginTop: '20px',
+                    width: '200px',
+                  }}
+                >
+                  Wyślij wiadomość
+                </button>
+              </div>
+            </Link>
+            <Link to="/">
+              <div>
+                <button
+                  style={{
+                    background: '#4CAF50',
+                    color: 'white',
+                    marginTop: '20px',
+                    width: '200px',
+                  }}
+                >
+                  Wysłane wiadomości
+                </button>
+              </div>
+            </Link>
+            <Link to="/">
+              <div>
+                <button
+                  style={{
+                    background: '#4CAF50',
+                    color: 'white',
+                    marginTop: '20px',
+                    width: '200px',
+                  }}
+                >
+                  Odebrane wiadomości
+                </button>
+              </div>
+            </Link>
+            <Link to="/">
+              <div>
+                <button
+                  style={{
+                    background: '#4CAF50',
+                    color: 'white',
+                    marginTop: '20px',
+                    width: '200px',
+                  }}
+                >
+                  Powrót
+                </button>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {isCommentModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              background: '#fff',
+              padding: '20px',
+              borderRadius: '5px',
+              minWidth: '300px',
+            }}
+          >
+            <h3>Dodaj komentarz</h3>
+            <textarea
+              style={{ width: '100%', height: '100px' }}
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+            />
+            <div style={{ marginTop: '10px', textAlign: 'right' }}>
+              <button
+                style={{
+                  marginRight: '10px',
+                  background: '#2196F3',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  cursor: 'pointer',
+                }}
+                onClick={handleSubmitComment}
+              >
+                Zatwierdź
+              </button>
+              <button
+                style={{
+                  background: '#f44336',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => setIsCommentModalOpen(false)}
+              >
+                Anuluj
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default RecipesPageForAllUsers;
