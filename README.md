@@ -19,7 +19,7 @@ Poniżej szczegółowa lista 20 testów wraz z lokalizacjami i pełnymi opisami:
 ---
 
 ### **1. BmiControllerIntegrationTests**
-- **[testPostBmiIntegration](src/test/java/com/example/apka_prozdrowotna/BmiControllerIntegrationTests.java)**  
+- **[testPostBmiIntegration](apka_prozdrowotna_backend/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/BmiControllerIntegrationTests.java)**  
   Testuje metodę POST `/postBmi`. Sprawdza, czy dla podanych danych (waga i wzrost) obliczone BMI jest poprawne. Weryfikuje, czy odpowiedź HTTP ma status 200, ciało odpowiedzi nie jest puste, a zwrócona wartość BMI zgadza się z oczekiwaną. Testuje również zapis BMI do bazy danych.
 
 ---
