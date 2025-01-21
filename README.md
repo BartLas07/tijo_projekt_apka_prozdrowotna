@@ -25,85 +25,85 @@ Poniżej szczegółowa lista 20 testów wraz z lokalizacjami i pełnymi opisami:
 ---
 
 ### **2. BmiControllerUnitTests**
-- **[testCalculateBmi](src/test/java/com/example/apka_prozdrowotna/BmiControllerUnitTests.java)**  
+- **[testCalculateBmi](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/BmiControllerUnitTests.java)**  
   Sprawdza, czy metoda `calculateBmi` poprawnie oblicza BMI dla danych wejściowych: waga 70 kg, wzrost 1.75 m. Oczekiwany wynik to 22.86.
 
-- **[testCalculateBmiForDifferentValues](src/test/java/com/example/apka_prozdrowotna/BmiControllerUnitTests.java)**  
+- **[testCalculateBmiForDifferentValues](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/BmiControllerUnitTests.java)**  
   Testuje metodę `calculateBmi` z innymi danymi wejściowymi: waga 90 kg, wzrost 1.80 m. Oczekiwany wynik to 27.78.
 
 ---
 
 ### **3. CaloriePoolControllerIntegrationTests**
-- **[testPostCaloriePoolIntegration](src/test/java/com/example/apka_prozdrowotna/CaloriePoolControllerIntegrationTests.java)**  
+- **[testPostCaloriePoolIntegration](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/CaloriePoolControllerIntegrationTests.java)**  
   Testuje metodę POST `/postCaloriePool`, która oblicza pulę kaloryczną na podstawie danych użytkownika (np. wiek, płeć, waga, poziom aktywności). Weryfikuje, czy odpowiedź HTTP ma status 200, ciało odpowiedzi zawiera poprawną wartość puli kalorycznej, oraz czy wartość została poprawnie zapisana w bazie danych.
 
 ---
 
 ### **4. CaloriePoolControllerUnitTests**
-- **[shouldCalculateCaloriePoolForFemaleWithModerateActivityAndReduction](src/test/java/com/example/apka_prozdrowotna/CaloriePoolControllerUnitTests.java)**  
+- **[shouldCalculateCaloriePoolForFemaleWithModerateActivityAndReduction](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/CaloriePoolControllerUnitTests.java)**  
   Testuje obliczenie puli kalorycznej dla kobiety w wieku 30 lat, o wadze 65 kg, wzroście 165 cm, umiarkowanej aktywności fizycznej i preferencji redukcji wagi. Oczekiwana wartość to 1807 kcal.
 
-- **[shouldCalculateCaloriePoolForMaleWithHighActivityAndGain](src/test/java/com/example/apka_prozdrowotna/CaloriePoolControllerUnitTests.java)**  
+- **[shouldCalculateCaloriePoolForMaleWithHighActivityAndGain](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/CaloriePoolControllerUnitTests.java)**  
   Weryfikuje obliczenie puli kalorycznej dla mężczyzny w wieku 25 lat, o wadze 75 kg, wzroście 180 cm, wysokiej aktywności fizycznej i preferencji zwiększenia wagi. Oczekiwana wartość to 3743 kcal.
 
 ---
 
 ### **5. DataDietControllerIntegrationTests**
-- **[shouldDeleteIngredientFromMealPeriod](src/test/java/com/example/apka_prozdrowotna/DataDietControllerIntegrationTests.java)**  
+- **[shouldDeleteIngredientFromMealPeriod](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/DataDietControllerIntegrationTests.java)**  
   Testuje metodę DELETE, która usuwa składnik z danego okresu posiłkowego (np. lunchu). Sprawdza, czy składnik został usunięty z bazy danych oraz czy GET `/getIngredients` zwraca pustą listę po usunięciu.
 
-- **[shouldReturnIngredientsForMealPeriod](src/test/java/com/example/apka_prozdrowotna/DataDietControllerIntegrationTests.java)**  
+- **[shouldReturnIngredientsForMealPeriod](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/DataDietControllerIntegrationTests.java)**  
   Weryfikuje poprawność działania GET `/getIngredients`, sprawdzając, czy zwracana lista składników dla danego okresu posiłkowego zawiera odpowiednie dane.
 
-- **[testGetBmiIntegration](src/test/java/com/example/apka_prozdrowotna/DataDietControllerIntegrationTests.java)**  
+- **[testGetBmiIntegration](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/DataDietControllerIntegrationTests.java)**  
   Testuje metodę GET `/getBmi`, sprawdzając poprawność odpowiedzi (kod statusu 200, ciało odpowiedzi zawierające poprawne BMI) oraz zapisanych danych użytkownika.
 
-- **[testGetCaloriePoolIntegration](src/test/java/com/example/apka_prozdrowotna/DataDietControllerIntegrationTests.java)**  
+- **[testGetCaloriePoolIntegration](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/DataDietControllerIntegrationTests.java)**  
   Testuje metodę GET `/getCaloriePool`, sprawdzając, czy odpowiedź zawiera prawidłowe dane o puli kalorycznej użytkownika.
 
-- **[testGetRecommendedHydrationIntegration](src/test/java/com/example/apka_prozdrowotna/DataDietControllerIntegrationTests.java)**  
+- **[testGetRecommendedHydrationIntegration](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/DataDietControllerIntegrationTests.java)**  
   Testuje metodę GET `/getRecommendedHydration`, weryfikując, czy zwracane dane o nawodnieniu użytkownika są poprawne.
 
 ---
 
 ### **6. DataDietHomeControllerUnitTests**
-- **[shouldReturnIngredientsForMealPeriod](src/test/java/com/example/apka_prozdrowotna/DataDietHomeControllerUnitTests.java)**  
+- **[shouldReturnIngredientsForMealPeriod](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/DataDietHomeControllerUnitTests.java)**  
   Sprawdza, czy metoda `getIngradientsFromMealPeriod` zwraca listę składników dla danego okresu posiłkowego (np. śniadania), na podstawie danych mockowanych w serwisie.
 
-- **[shouldDeleteIngredientFromMealPeriod](src/test/java/com/example/apka_prozdrowotna/DataDietHomeControllerUnitTests.java)**  
+- **[shouldDeleteIngredientFromMealPeriod](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/DataDietHomeControllerUnitTests.java)**  
   Weryfikuje poprawność usuwania składnika z danego okresu posiłkowego poprzez metodę DELETE.
 
 ---
 
 ### **7. RecommendedHydrationControllerIntegrationTests**
-- **[testPostRecommendedHydrationIntegration](src/test/java/com/example/apka_prozdrowotna/RecommendedHydrationControllerIntegrationTests.java)**  
+- **[testPostRecommendedHydrationIntegration](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/RecommendedHydrationControllerIntegrationTests.java)**  
   Testuje metodę POST `/postRecommendedHydration`, sprawdzając, czy wartość nawodnienia obliczona na podstawie wagi użytkownika jest poprawna, oraz czy została prawidłowo zapisana w bazie danych.
 
 ---
 
 ### **8. SearchIngredientControllerIntegrationTests**
-- **[integrationTestGetIngredientList](src/test/java/com/example/apka_prozdrowotna/SearchIngredientControllerIntegrationTests.java)**  
+- **[integrationTestGetIngredientList](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/SearchIngredientControllerIntegrationTests.java)**  
   Weryfikuje poprawność działania GET `/getIngredientList`. Testuje, czy zwracana lista składników z bazy danych zawiera poprawne dane (np. "Agrest", "Ananas").
 
-- **[integrationTestPostIngredientToMealPeriod](src/test/java/com/example/apka_prozdrowotna/SearchIngredientControllerIntegrationTests.java)**  
+- **[integrationTestPostIngredientToMealPeriod](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/SearchIngredientControllerIntegrationTests.java)**  
   Testuje metodę POST `/postIngredientToMealPeriod/{mealPeriod}`. Weryfikuje, czy składnik został poprawnie dodany do posiłku, a odpowiedź zawiera oczekiwaną wartość.
 
 ---
 
 ### **9. RecommendedHydrationControllerUnitTests**
-- **[shouldCalculateRecommendedHydrationForNormalWeight](src/test/java/com/example/apka_prozdrowotna/RecommendedHydrationControllerUnitTests.java)**  
+- **[shouldCalculateRecommendedHydrationForNormalWeight](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/RecommendedHydrationControllerUnitTests.java)**  
   Weryfikuje obliczenie nawodnienia dla użytkownika o wadze 70 kg. Oczekiwana wartość to 2.5 litra.
 
-- **[shouldCalculateRecommendedHydrationForHigherWeight](src/test/java/com/example/apka_prozdrowotna/RecommendedHydrationControllerUnitTests.java)**  
+- **[shouldCalculateRecommendedHydrationForHigherWeight](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/RecommendedHydrationControllerUnitTests.java)**  
   Sprawdza obliczenie nawodnienia dla użytkownika o wadze 90 kg. Oczekiwana wartość to 3.2 litra.
 
 ---
 
 ### **10. SearchIngredientControllerUnitTests**
-- **[shouldReturnListOfIngredientsFromRepository](src/test/java/com/example/apka_prozdrowotna/SearchIngredientControllerUnitTests.java)**  
+- **[shouldReturnListOfIngredientsFromRepository](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/SearchIngredientControllerUnitTests.java)**  
   Testuje, czy metoda `getIngredientList` zwraca listę składników z repozytorium, oraz weryfikuje, czy zwrócone dane są poprawne (np. "Marchew", "Ogórek").
 
-- **[shouldPostIngredientToMealPeriodAndReturnLabel](src/test/java/com/example/apka_prozdrowotna/SearchIngredientControllerUnitTests.java)**  
+- **[shouldPostIngredientToMealPeriodAndReturnLabel](apka_prozdrowotna_backend_tijo/apka_prozdrowotna/src/test/java/com/example/apka_prozdrowotna/SearchIngredientControllerUnitTests.java)**  
   Sprawdza, czy metoda `postIngredientToMealPeriod` poprawnie dodaje składnik do wybranego okresu posiłkowego oraz zwraca odpowiedni label.
 
 ---
